@@ -1,3 +1,7 @@
 /.kotlin
 /.gradle
 /build
+
+# incrementality state of the data generator
+.cache/
+modules/forge/src/generated/resources/.cache/7e059ad7a6ad58ca02500df277502315e251cebc

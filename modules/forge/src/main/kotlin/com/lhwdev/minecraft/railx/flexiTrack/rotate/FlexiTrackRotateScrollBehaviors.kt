@@ -4,6 +4,7 @@ import com.lhwdev.minecraft.railx.common.ScrollValueBehaviorExtension
 import com.lhwdev.minecraft.railx.common.ValueSettingsBehaviourExtra
 import com.lhwdev.minecraft.railx.common.minRadius
 import com.lhwdev.minecraft.railx.flexiTrack.*
+import com.lhwdev.minecraft.railx.registry.RailXLang
 import com.lhwdev.minecraft.railx.utils.component1
 import com.lhwdev.minecraft.railx.utils.component2
 import com.lhwdev.minecraft.utils.vectors.minus
@@ -37,13 +38,13 @@ import kotlin.math.sign
 
 
 class FlexiTrackRotateScrollBehaviors(be: FlexiTrackBlockEntity) :
-	ScrollValueBehaviour(Component.literal("Rotate Flexi Track"), be, FlexiRotationValueBox),
+	ScrollValueBehaviour(RailXLang.of(RailXLang.FlexiTrackRotateLabel), be, FlexiRotationValueBox),
 	FlexiTrackBlockBehavior, ValueSettingsBehaviourExtra, ScrollValueBehaviorExtension {
 	
 	enum class Kind(val title: String) {
-		Direction(title = "Direction"),
-		Gradient(title = "Gradient"),
-		Cant(title = "Cant");
+		Direction(title = RailXLang.FlexiTrackRotateKindDirection),
+		Gradient(title = RailXLang.FlexiTrackRotateKindGradient),
+		Cant(title = RailXLang.FlexiTrackRotateKindCant);
 		
 		fun next(): Kind = entries[(ordinal + 1) % entries.size]
 	}
@@ -80,7 +81,7 @@ class FlexiTrackRotateScrollBehaviors(be: FlexiTrackBlockEntity) :
 	private fun delegate() = delegate?.takeIf { it.kind == currentKind }
 		?: createDelegate().also {
 			delegate = it
-			label = it?.label ?: Component.literal("Rotate Flexi Track")
+			label = it?.label ?: RailXLang.of(RailXLang.FlexiTrackRotateLabel)
 		}
 	
 	private fun createDelegate() = be.shape.axes.singleOrNull()?.let { axis ->
@@ -123,7 +124,7 @@ class FlexiTrackRotateScrollBehaviors(be: FlexiTrackBlockEntity) :
 	): ValueSettingsBoard =
 		delegate()?.createBoard(player, hitResult, mode)
 			?: ValueSettingsBoard(
-				Component.literal("Cannot rotate track"), 0, 0, emptyList(),
+				RailXLang.of(RailXLang.FlexiTrackRotateCannotRotate), 0, 0, emptyList(),
 				ValueSettingsFormatter { Component.empty() })
 	
 	override fun createBoard(player: Player, hitResult: BlockHitResult): ValueSettingsBoard =
@@ -173,16 +174,15 @@ class FlexiTrackRotateScrollBehaviors(be: FlexiTrackBlockEntity) :
 	}
 	
 	override fun addExtraTips(to: MutableList<MutableComponent>) {
-		fun kindText(kind: Kind) = Component.literal(kind.name.first().uppercase() + kind.name.drop(1))
+		fun kindText(kind: Kind) = RailXLang.of(kind.title)
 			.withStyle(if(clientKind == kind) ChatFormatting.GREEN else ChatFormatting.GRAY)
 		
-		to += Component.literal("Short click to cycle between ")
-			.append(kindText(Kind.Direction))
-			.append(", ")
-			.append(kindText(Kind.Gradient))
-			.append(", and ")
-			.append(kindText(Kind.Cant))
-			.append(".")
+		to += RailXLang.of(
+			RailXLang.FlexiTrackRotateShortClickHint,
+			kindText(Kind.Direction),
+			kindText(Kind.Gradient),
+			kindText(Kind.Cant),
+		)
 	}
 	
 	override fun read(nbt: CompoundTag, registries: HolderLookup.Provider, clientPacket: Boolean) {}

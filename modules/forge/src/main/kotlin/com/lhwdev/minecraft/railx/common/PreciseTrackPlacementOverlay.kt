@@ -4,6 +4,7 @@ import com.lhwdev.minecraft.railx.RailXConfig
 import com.lhwdev.minecraft.railx.flexiTrack.*
 import com.lhwdev.minecraft.railx.flexiTrack.rotate.toRotation
 import com.lhwdev.minecraft.railx.mixin.flexiTrack.PlacementInfoAccessor
+import com.lhwdev.minecraft.railx.registry.RailXLang
 import com.lhwdev.minecraft.railx.utils.ColorsArgb
 import com.lhwdev.minecraft.railx.utils.orFalse
 import com.lhwdev.minecraft.railx.utils.round
@@ -71,10 +72,14 @@ object PreciseTrackPlacementOverlay : LayeredDraw.Layer {
 					from = it.curveFrom.toPoint(),
 					to = it.curveTo.toPoint(),
 					curve = curve,
-					title = "Flexible Placement",
+					title = RailXLang.PreciseOverlayTitleFlexiblePlacement,
 				)
 			} else {
-				PreciseLinePlacementInfo(from = it.from, to = it.to, title = "Flexible Placement")
+				PreciseLinePlacementInfo(
+					from = it.from,
+					to = it.to,
+					title = RailXLang.PreciseOverlayTitleFlexiblePlacement,
+				)
 			}
 		}
 		
@@ -213,7 +218,7 @@ object PreciseTrackPlacementOverlay : LayeredDraw.Layer {
 		val from: FlexiPlacementInfo.TrackPoint,
 		val to: FlexiPlacementInfo.TrackPoint,
 		val curve: BezierConnection,
-		title: String = "Placement",
+		title: String = RailXLang.PreciseOverlayTitlePlacement,
 		placeFrom: FlexiPlacementInfo.TrackPoint = from,
 		placeTo: FlexiPlacementInfo.TrackPoint = to,
 	) : PreciseInfo() {
@@ -230,7 +235,7 @@ object PreciseTrackPlacementOverlay : LayeredDraw.Layer {
 	class PreciseLinePlacementInfo(
 		val from: FlexiPlacementInfo.TrackEnd,
 		val to: FlexiPlacementInfo.TrackEnd,
-		title: String = "Placement",
+		title: String = RailXLang.PreciseOverlayTitlePlacement,
 	) : PreciseInfo() {
 		override val targetTrack = TrackPoint(to.pos.toVec3(), to.tangent)
 		
@@ -249,21 +254,23 @@ object PreciseTrackPlacementOverlay : LayeredDraw.Layer {
 		override val lines = mutableListOf<Component>()
 		
 		init {
-			val first = Component.literal("Axis = ${displayPoint(direction)}")
-			if(tilted) first.append(" (Tilted)")
-			if(curvePoint != null) first.append(", R=")
-				.append(
+			val first = RailXLang.of(RailXLang.PreciseOverlayAxis, displayPoint(direction))
+			if(tilted) first.append(RailXLang.of(RailXLang.PreciseOverlayTilted))
+			if(curvePoint != null) first.append(
+				RailXLang.of(
+					RailXLang.PreciseOverlayRadius,
 					valueStyle(
 						curvePoint.curve.radiusTextAt(
 							curvePoint.curve.getSegmentT(curvePoint.segmentIndex).toDouble()
 						)
-					)
+					),
 				)
+			)
 			lines += first
 			
 			if(curvePoint != null) lines += curveInfo(
 				curvePoint.curve,
-				title = "Hovered Curve",
+				title = RailXLang.PreciseOverlayTitleHoveredCurve,
 				baseColor = 0xcce8ff,
 				bezierPoint = curvePoint,
 			)
@@ -295,18 +302,23 @@ object PreciseTrackPlacementOverlay : LayeredDraw.Layer {
 		val delta = to.pos - from.pos
 		
 		val line = Component.empty()
-		line.append(Component.literal(title))
-		line.append(" | Axis: ")
-			.append(valueStyle(displayPoint(direction(from.normalizedTangent, from.normalizedNormal))))
+		line.append(RailXLang.of(title))
+		line.append(
+			RailXLang.of(
+				RailXLang.PreciseOverlayLineAxis,
+				valueStyle(displayPoint(direction(from.normalizedTangent, from.normalizedNormal))),
+			)
+		)
 		
-		line.append(", Δ=")
-			.append(valueStyle(with(delta) { "[$x, $y, $z]" }))
+		line.append(
+			RailXLang.of(RailXLang.PreciseOverlayLineDelta, valueStyle(with(delta) { "[$x, $y, $z]" }))
+		)
 		
 		val length = from.end.distanceTo(to.end)
-		line.append(", L=")
-			.append(valueStyle(round(length, 100).toString()))
-		if(delta.y != 0) line.append(", Grad=")
-			.append(valueStyle(delta.toVec3().gradient()))
+		line.append(RailXLang.of(RailXLang.PreciseOverlayLineLength, valueStyle(round(length, 100).toString())))
+		if(delta.y != 0) line.append(
+			RailXLang.of(RailXLang.PreciseOverlayLineGradient, valueStyle(delta.toVec3().gradient()))
+		)
 		lines += line.withStyle(Style.EMPTY.withColor(baseColor))
 		
 		return lines
@@ -326,28 +338,37 @@ object PreciseTrackPlacementOverlay : LayeredDraw.Layer {
 		val delta = curve.to - curve.from
 		
 		val line = Component.empty()
-		line.append(Component.literal(title))
-		line.append(" | Axis: ")
-			.append(valueStyle(displayPoint(direction(curve.axes.first, curve.normals.first))))
-			.append(" -> ")
-			.append(valueStyle(displayPoint(direction(curve.axes.second, curve.normals.second))))
+		line.append(RailXLang.of(title))
+		line.append(
+			RailXLang.of(
+				RailXLang.PreciseOverlayLineAxis,
+				valueStyle(displayPoint(direction(curve.axes.first, curve.normals.first))),
+			)
+		)
+		line.append(
+			RailXLang.of(
+				RailXLang.PreciseOverlayLineAxisSecond,
+				valueStyle(displayPoint(direction(curve.axes.second, curve.normals.second))),
+			)
+		)
 		
-		line.append(", Δ=")
-			.append(valueStyle(with(delta) { "[$x, $y, $z]" }))
+		line.append(
+			RailXLang.of(RailXLang.PreciseOverlayLineDelta, valueStyle(with(delta) { "[$x, $y, $z]" }))
+		)
 		if(placeFrom != null || placeTo != null) {
 			val placeDelta = (placeTo?.pos ?: curve.to) - (placeFrom?.pos ?: curve.from)
-			line.append(" or ")
-				.append(valueStyle(with(placeDelta) { "[$x, $y, $z]" }))
+			line.append(
+				RailXLang.of(RailXLang.PreciseOverlayLineOr, valueStyle(with(placeDelta) { "[$x, $y, $z]" }))
+			)
 		}
 		var length = curve.length
 		if(placeFrom != null) length += sqrt(placeFrom.pos.distSqr(curve.from))
 		if(placeTo != null) length += sqrt(placeTo.pos.distSqr(curve.to))
-		line.append(", L=")
-			.append(valueStyle(round(length, 100).toString()))
-		line.append(", R=")
-			.append(valueStyle(minRadius(curve)))
-		if(delta.y != 0) line.append(", Grad=")
-			.append(valueStyle(delta.toVec3().gradient()))
+		line.append(RailXLang.of(RailXLang.PreciseOverlayLineLength, valueStyle(round(length, 100).toString())))
+		line.append(RailXLang.of(RailXLang.PreciseOverlayRadius, valueStyle(minRadius(curve))))
+		if(delta.y != 0) line.append(
+			RailXLang.of(RailXLang.PreciseOverlayLineGradient, valueStyle(delta.toVec3().gradient()))
+		)
 		lines += line.withStyle(Style.EMPTY.withColor(baseColor))
 		
 		val onStraightLine = curve.axes.second.cross(delta.toVec3()).length() < 0.001
@@ -355,10 +376,10 @@ object PreciseTrackPlacementOverlay : LayeredDraw.Layer {
 			val line2 = Component.empty()
 			val dimFrom = if(bezierPoint != null) curve.getSegmentT(bezierPoint.segmentIndex) > 0.5 else null
 			
-			fun dimTitle(name: String, from: Boolean) = if(dimFrom == null || from == dimFrom) {
-				Component.literal(name)
+			fun dimTitle(key: String, from: Boolean) = if(dimFrom == null || from == dimFrom) {
+				RailXLang.of(key)
 			} else {
-				Component.literal(name).withStyle(Style.EMPTY.withColor(0xffffff))
+				RailXLang.of(key).withStyle(Style.EMPTY.withColor(0xffffff))
 			}
 			
 			fun dimContent(from: Boolean, block: () -> MutableComponent) =
@@ -366,20 +387,29 @@ object PreciseTrackPlacementOverlay : LayeredDraw.Layer {
 			
 			line2.append(dimContent(from = true) {
 				Component.empty()
-					.append(dimTitle("From", from = true))
-					.append(": R=")
-					.append(valueStyle(curve.radiusTextAt(t = 0.0)))
+					.append(dimTitle(RailXLang.PreciseOverlayLineFrom, from = true))
+					.append(
+						RailXLang.of(
+							RailXLang.PreciseOverlayLineRadiusSuffix,
+							valueStyle(curve.radiusTextAt(t = 0.0)),
+						)
+					)
 			})
 			line2.append(" -> ")
 			line2.append(dimContent(from = false) {
 				Component.empty()
-					.append(dimTitle("To", from = false))
-					.append(": R=")
-					.append(valueStyle(curve.radiusTextAt(t = 1.0)))
+					.append(dimTitle(RailXLang.PreciseOverlayLineTo, from = false))
+					.append(
+						RailXLang.of(
+							RailXLang.PreciseOverlayLineRadiusSuffix,
+							valueStyle(curve.radiusTextAt(t = 1.0)),
+						)
+					)
 			})
 			
-			if(bezierPoint != null) line2.append(", at ")
-				.append(
+			if(bezierPoint != null) line2.append(
+				RailXLang.of(
+					RailXLang.PreciseOverlayLineAt,
 					valueStyle(
 						round(
 							curve.lengthTo(segmentIndex = bezierPoint.segmentIndex + 1),
@@ -387,6 +417,7 @@ object PreciseTrackPlacementOverlay : LayeredDraw.Layer {
 						).toString()
 					)
 				)
+			)
 			
 			lines += line2.withStyle(Style.EMPTY.withColor(baseColor))
 		}

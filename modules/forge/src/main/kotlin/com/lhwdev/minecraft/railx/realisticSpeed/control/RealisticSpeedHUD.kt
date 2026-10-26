@@ -1,6 +1,7 @@
 package com.lhwdev.minecraft.railx.realisticSpeed.control
 
 import com.lhwdev.minecraft.railx.RailXConfig
+import com.lhwdev.minecraft.railx.registry.RailXLang
 import com.lhwdev.minecraft.railx.utils.orFalse
 import com.simibubi.create.content.contraptions.actors.trainControls.ControlsHandler
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity
@@ -29,7 +30,7 @@ object RealisticSpeedHUD : LayeredDraw.Layer {
 		val parameters = RealisticSpeedClient.parameters ?: return
 		
 		val text = Component.empty()
-		if(parameters.slip) text.append("Slip")
+		if(parameters.slip) text.append(RailXLang.of(RailXLang.RealisticSpeedHudSlip))
 		
 		graphics.drawString(
 			mc.font,

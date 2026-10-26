@@ -2,6 +2,7 @@ package com.lhwdev.minecraft.railx.mixin.common.manualStation;
 
 import com.lhwdev.minecraft.railx.RailXConfig;
 import com.lhwdev.minecraft.railx.common.ManualStation;
+import com.lhwdev.minecraft.railx.registry.RailXLang;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -85,17 +86,23 @@ public abstract class CarriageContraptionEntityMixin {
 			}
 		} else if(train.currentStation == null) {
 			MutableComponent message;
-			if(isClose) message = Component.literal(slow ? "Press " : "Stop and press ")
-				.append(Component.keybind("key.jump"))
-				.append(" to arrive at ")
-				.append(station.name);
+			if(isClose) message = Component.translatable(
+					slow ? RailXLang.INSTANCE.getManualStationPressToArrive()
+						: RailXLang.INSTANCE.getManualStationStopAndPressToArrive(),
+					Component.keybind("key.jump"),
+					station.name
+				);
 			else {
-				message = Component.literal("Approaching ")
-					.append(station.name);
+				message = Component.translatable(
+					RailXLang.INSTANCE.getManualStationApproaching(),
+					station.name
+				);
 				if(distanceAbs <= distanceLimit + 2) message
-					.append(": ")
-					.append(distance > 0 ? "-" : "+")
-					.append(Long.toString(Math.abs(Math.round(distanceAbs * 10) * 100)));
+					.append(Component.translatable(
+						RailXLang.INSTANCE.getManualStationDistance(),
+						distance > 0 ? "-" : "+",
+						Long.toString(Math.abs(Math.round(distanceAbs * 10) * 100))
+					));
 			}
 			sendPrompt(player, message, false);
 			railx$manualStationMessage = true;

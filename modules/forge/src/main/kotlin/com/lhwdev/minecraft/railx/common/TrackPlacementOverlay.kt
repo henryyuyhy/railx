@@ -4,6 +4,7 @@ import com.lhwdev.minecraft.railx.RailXConfig
 import com.lhwdev.minecraft.railx.flexiTrack.FlexiTrackMaterial
 import com.lhwdev.minecraft.railx.flexiTrack.FlexiTrackPlacementClient
 import com.lhwdev.minecraft.railx.registry.AllKeys
+import com.lhwdev.minecraft.railx.registry.RailXLang
 import com.simibubi.create.content.trains.track.TrackBlock
 import com.simibubi.create.content.trains.track.TrackBlockItem
 import com.simibubi.create.foundation.utility.CreateLang
@@ -24,22 +25,20 @@ object TrackPlacementOverlay {
 			(AllKeys.FlexiblePlacement.key == mc.options.keySprint.key.value || flexible)
 		) {
 			if(flexible && isHandTrackNotFlexible()) {
-				Component.literal("This track cannot be placed flexibly").withStyle(ChatFormatting.RED)
+				RailXLang.of(RailXLang.FlexiTrackOverlayCannotPlaceFlexibly).withStyle(ChatFormatting.RED)
 			} else {
 				when(RailXConfig.Client.flexiTrak.flexibleSelection.get()) {
-					FlexiTrackPlacementClient.FlexibleSelection.Hold -> Component.literal("Hold ")
-						.append(
-							Component.keybind(AllKeys.FlexiblePlacement.description)
-								.withStyle(if(flexible) ChatFormatting.GREEN else ChatFormatting.GRAY)
-						)
-						.append(" for flexible placement")
+					FlexiTrackPlacementClient.FlexibleSelection.Hold -> RailXLang.of(
+						RailXLang.FlexiTrackOverlayHold,
+						Component.keybind(AllKeys.FlexiblePlacement.description)
+							.withStyle(if(flexible) ChatFormatting.GREEN else ChatFormatting.GRAY),
+					)
 					
-					FlexiTrackPlacementClient.FlexibleSelection.Toggle -> Component.literal("Press ")
-						.append(
-							Component.keybind(AllKeys.FlexiblePlacement.description)
-								.withStyle(if(flexible) ChatFormatting.GREEN else ChatFormatting.GRAY)
-						)
-						.append(" to toggle flexible placement")
+					FlexiTrackPlacementClient.FlexibleSelection.Toggle -> RailXLang.of(
+						RailXLang.FlexiTrackOverlayToggle,
+						Component.keybind(AllKeys.FlexiblePlacement.description)
+							.withStyle(if(flexible) ChatFormatting.GREEN else ChatFormatting.GRAY),
+					)
 				}.withStyle(ChatFormatting.WHITE)
 			}
 		} else {

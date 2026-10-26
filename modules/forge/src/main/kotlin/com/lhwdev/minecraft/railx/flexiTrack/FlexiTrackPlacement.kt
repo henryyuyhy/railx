@@ -5,6 +5,7 @@ import com.lhwdev.minecraft.railx.buildTrack.BuildTrak
 import com.lhwdev.minecraft.railx.common.minRadius
 import com.lhwdev.minecraft.railx.flexiTrack.FlexiPlaceResult.PlaceError
 import com.lhwdev.minecraft.railx.registry.AllDataComponents
+import com.lhwdev.minecraft.railx.registry.RailXLang
 import com.lhwdev.minecraft.railx.utils.closeTo
 import com.lhwdev.minecraft.railx.utils.pow2
 import com.lhwdev.minecraft.railx.utils.similarTo
@@ -70,7 +71,6 @@ object FlexiTrackPlacement {
 	}
 	
 	
-	fun PlaceError(message: String): PlaceError = PlaceError(Component.literal(message))
 	fun PlaceErrorCreate(key: String): PlaceError = PlaceError(CreateLang.translateDirect("track.$key"))
 	
 	
@@ -105,7 +105,9 @@ object FlexiTrackPlacement {
 		if(info !is FlexiPlacementInfo || !info.valid) return info
 		
 		if(info.addToPlan) {
-			if(info.pavementBlock != null) return info.placeError("pavement not supported for track plan")
+			if(info.pavementBlock != null) return info.placeError(
+				RailXLang.of(RailXLang.FlexiTrackPlaceErrorPavementNotSupported)
+			)
 			if(!level.isClientSide) BuildTrak.currentPlan.addSegment(info)
 			return info
 		}
@@ -150,7 +152,9 @@ object FlexiTrackPlacement {
 		parameter: Parameter,
 		cacheStorage: CacheStorage? = null,
 	): FlexiPlaceResult {
-		if(toState.block !is ITrackBlock) return PlaceError("internal error: toState is not ITrackBlock")
+		if(toState.block !is ITrackBlock) return PlaceError(
+			RailXLang.of(RailXLang.FlexiTrackPlaceErrorInternal, "toState is not ITrackBlock")
+		)
 		
 		val lookVec = player.lookAngle.multiply(1.0, 0.0, 1.0)
 		val lookAngle = if(lookVec.lengthSqr() similarTo 0.0) {
@@ -168,7 +172,9 @@ object FlexiTrackPlacement {
 		}
 		
 		val fromPoint = item.get(CreateDataComponents.TRACK_CONNECTING_FROM)?.convertToFlexi()
-			?: return PlaceError("internal error: no track_connecting_from found")
+			?: return PlaceError(
+				RailXLang.of(RailXLang.FlexiTrackPlaceErrorInternal, "no track_connecting_from found")
+			)
 		if(fromPoint.pos == toPos)
 			return PlaceError.SecondPoint()
 		
@@ -207,7 +213,7 @@ object FlexiTrackPlacement {
 		if(shouldPave) info.pavementBlock = offhandItem.block
 		
 		info.curve = if(info.curveFrom.pos != info.curveTo.pos) {
-			info.createCurve() ?: return PlaceError("curve too long")
+			info.createCurve() ?: return PlaceError(RailXLang.of(RailXLang.FlexiTrackPlaceErrorCurveTooLong))
 		} else null
 		
 		info = prepareConnect(info, level, player)
@@ -228,7 +234,7 @@ object FlexiTrackPlacement {
 		val fromBlock = fromState.block as? ITrackBlock ?: return PlaceErrorCreate("original_missing")
 		
 		val toBlock = toState.block as? ITrackBlock
-			?: return PlaceError("item is not TrackBlockItem")
+			?: return PlaceError(RailXLang.of(RailXLang.FlexiTrackPlaceErrorNotTrackBlockItem))
 		
 		val material = TrackMaterial.fromItem(item.item)
 		
@@ -468,7 +474,7 @@ object FlexiTrackPlacement {
 		}
 		
 		if(from.end.distanceToSqr(to.end) < 1.0 - 1e-5) {
-			return placeError(text = "too close")
+			return placeError(RailXLang.of(RailXLang.FlexiTrackPlaceErrorTooClose))
 		}
 		
 		return this

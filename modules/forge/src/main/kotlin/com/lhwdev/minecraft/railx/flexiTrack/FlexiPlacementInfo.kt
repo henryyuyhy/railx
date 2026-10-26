@@ -112,7 +112,6 @@ class FlexiPlacementInfo(
 		return curve
 	}
 	
-	fun placeError(text: String) = placeError(Component.literal(text))
 	fun placeErrorCreate(key: String) = placeError(CreateLang.translateDirect("track.$key"))
 	fun placeError(text: MutableComponent) = placeError(FlexiPlaceResult.PlaceError(text))
 	fun placeError(error: FlexiPlaceResult.PlaceError) = this.also { this.error = error }

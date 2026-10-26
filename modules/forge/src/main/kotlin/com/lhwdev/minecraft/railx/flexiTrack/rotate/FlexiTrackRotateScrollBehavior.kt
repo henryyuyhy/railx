@@ -4,6 +4,7 @@ import com.lhwdev.minecraft.railx.flexiTrack.FlexiDirection
 import com.lhwdev.minecraft.railx.flexiTrack.FlexiTrackBlockEntity
 import com.lhwdev.minecraft.railx.flexiTrack.map
 import com.lhwdev.minecraft.railx.flexiTrack.optimize
+import com.lhwdev.minecraft.railx.registry.RailXLang
 import com.lhwdev.minecraft.railx.utils.transformUnit
 import com.lhwdev.minecraft.utils.vectors.unaryMinus
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform
@@ -23,12 +24,13 @@ import kotlin.math.roundToInt
 
 
 private fun FlexiTrackRotateScrollBehaviors.Kind.createLabel() =
-	Component.literal("Rotate Flexi Track ")
-		.append(Component.literal(title))
+	RailXLang.of(RailXLang.FlexiTrackRotateLabelWithKind, RailXLang.of(title))
 
 private fun FlexiTrackRotateScrollBehaviors.Kind.createScreenLabel() =
-	Component.literal("Set Flexi Track ")
-		.append(Component.literal(title).withStyle(ChatFormatting.YELLOW))
+	RailXLang.of(
+		RailXLang.FlexiTrackRotateScreenLabel,
+		RailXLang.of(title).withStyle(ChatFormatting.YELLOW),
+	)
 
 abstract class FlexiTrackRotateScrollBehavior(
 	val kind: FlexiTrackRotateScrollBehaviors.Kind,
@@ -125,7 +127,7 @@ abstract class FlexiTrackRotateScrollBehavior(
 				kind.createScreenLabel(),
 				PreciseStepCount,
 				10,
-				listOf(Component.literal(kind.title).withStyle(ChatFormatting.BOLD)),
+				listOf(RailXLang.of(kind.title).withStyle(ChatFormatting.BOLD)),
 				ValueSettingsFormatter { valueSettings ->
 					val v = preciseMinValue + valueSettings.value * preciseStep
 					Component.literal(formatRotation(v, precise = true))
@@ -145,7 +147,7 @@ abstract class FlexiTrackRotateScrollBehavior(
 			kind.createScreenLabel(),
 			if(endInclusive) steps else steps - 1,
 			8,
-			listOf(Component.literal(kind.title).withStyle(ChatFormatting.BOLD)),
+			listOf(RailXLang.of(kind.title).withStyle(ChatFormatting.BOLD)),
 			ValueSettingsFormatter { valueSettings ->
 				val v = range.start + valueSettings.value * step
 				Component.literal(formatRotation(v, precise = false))

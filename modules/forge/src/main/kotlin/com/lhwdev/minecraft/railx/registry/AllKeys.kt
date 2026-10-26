@@ -1,6 +1,5 @@
 package com.lhwdev.minecraft.railx.registry
 
-import com.lhwdev.minecraft.railx.RailX
 import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
@@ -15,14 +14,14 @@ import org.lwjgl.glfw.GLFW
 
 @OnlyIn(Dist.CLIENT)
 enum class AllKeys(val description: String, val defaultKey: Int) {
-	FlexiblePlacement(description = "flexiTrack.flexible_placement", defaultKey = GLFW.GLFW_KEY_LEFT_CONTROL),
+	FlexiblePlacement(description = RailXLang.KeyFlexiblePlacement, defaultKey = GLFW.GLFW_KEY_LEFT_CONTROL),
 	
-	ThrottleAccelerate(description = "throttle.accelerate", defaultKey = GLFW.GLFW_KEY_LEFT_BRACKET),
-	ThrottleNeutral(description = "throttle.neutral", defaultKey = GLFW.GLFW_KEY_SEMICOLON),
-	ThrottleBrake(description = "throttle.brake", defaultKey = GLFW.GLFW_KEY_PERIOD),
-	ThrottleEmergencyBrake(description = "throttle.emergency_brake", defaultKey = GLFW.GLFW_KEY_COMMA),
-	ThrottleReverserForward(description = "throttle.reverser_forward", defaultKey = GLFW.GLFW_KEY_O),
-	ThrottleReverserBackward(description = "throttle.reverser_backward", defaultKey = GLFW.GLFW_KEY_K),
+	ThrottleAccelerate(description = RailXLang.KeyThrottleAccelerate, defaultKey = GLFW.GLFW_KEY_LEFT_BRACKET),
+	ThrottleNeutral(description = RailXLang.KeyThrottleNeutral, defaultKey = GLFW.GLFW_KEY_SEMICOLON),
+	ThrottleBrake(description = RailXLang.KeyThrottleBrake, defaultKey = GLFW.GLFW_KEY_PERIOD),
+	ThrottleEmergencyBrake(description = RailXLang.KeyThrottleEmergencyBrake, defaultKey = GLFW.GLFW_KEY_COMMA),
+	ThrottleReverserForward(description = RailXLang.KeyThrottleReverserForward, defaultKey = GLFW.GLFW_KEY_O),
+	ThrottleReverserBackward(description = RailXLang.KeyThrottleReverserBackward, defaultKey = GLFW.GLFW_KEY_K),
 	;
 	
 	var bound: KeyMapping? = null
@@ -61,7 +60,7 @@ enum class AllKeys(val description: String, val defaultKey: Int) {
 		@SubscribeEvent
 		fun register(event: RegisterKeyMappingsEvent) {
 			for(key in entries) {
-				val mapping = KeyMapping(key.description, key.defaultKey, RailX.Name)
+				val mapping = KeyMapping(key.description, key.defaultKey, RailXLang.KeyCategories)
 				key.bound = mapping
 				event.register(mapping)
 			}

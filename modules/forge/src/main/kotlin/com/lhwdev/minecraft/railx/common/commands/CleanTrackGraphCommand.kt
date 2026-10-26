@@ -1,6 +1,7 @@
 package com.lhwdev.minecraft.railx.common.commands
 
 import com.lhwdev.minecraft.railx.registry.RailXCommandBuildContext
+import com.lhwdev.minecraft.railx.registry.RailXLang
 import com.lhwdev.minecraft.utils.vectors.plus
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
@@ -21,8 +22,8 @@ import net.neoforged.fml.ModList
 
 
 private val ErrorNoWorldEdit =
-	SimpleCommandExceptionType(Component.literal("requires worldedit mod for region selection"))
-private val ErrorNoSelection = SimpleCommandExceptionType(Component.literal("no selection"))
+	SimpleCommandExceptionType(RailXLang.of(RailXLang.CommandErrorNoWorldEdit))
+private val ErrorNoSelection = SimpleCommandExceptionType(RailXLang.of(RailXLang.CommandErrorNoSelection))
 
 
 fun RailXCommandBuildContext.cleanTrackGraphCommand(): LiteralArgumentBuilder<CommandSourceStack> = Commands
@@ -123,7 +124,7 @@ fun RailXCommandBuildContext.cleanTrackGraphCommand(): LiteralArgumentBuilder<Co
 			TrackPropagator.onRailAdded(level, pos, level.getBlockState(pos))
 		}
 		
-		source.sendSuccess({ Component.literal("Successfully updated all track nodes in selection") }, true)
+		source.sendSuccess({ RailXLang.of(RailXLang.CommandFixTrackGraphSuccess) }, true)
 		0
 	}
 

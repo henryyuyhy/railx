@@ -21,7 +21,7 @@ object AllCreativeModeTabs {
 		Registries.CREATIVE_MODE_TAB,
 	) {
 		CreativeModeTab.builder()
-			.title(Component.literal("RailX"))
+			.title(RailXLang.of(RailXLang.CreativeTab))
 			.withTabsBefore(CreateCreativeModeTabs.BASE_CREATIVE_TAB.key)
 			.icon { CreateBlocks.TRACK.asStack() }
 			.displayItems(RegistrateDisplayItemsGenerator())

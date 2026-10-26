@@ -1,6 +1,7 @@
 package com.lhwdev.minecraft.railx.throttle
 
 import com.lhwdev.minecraft.railx.RailXConfig
+import com.lhwdev.minecraft.railx.registry.RailXLang
 import com.lhwdev.minecraft.railx.utils.orFalse
 import com.simibubi.create.content.contraptions.actors.trainControls.ControlsHandler
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity
@@ -33,28 +34,31 @@ object ThrottleHUD : LayeredDraw.Layer {
 		val throttle = ThrottlesClient.throttle ?: return
 		val text = Component.empty()
 		when(throttle.reverser) {
-			Throttles.Reverser.Forward -> text.append("Forward")
-			Throttles.Reverser.Neutral -> text.append("Neutral")
-			Throttles.Reverser.Backward -> text.append("Backward")
+			Throttles.Reverser.Forward -> text.append(RailXLang.of(RailXLang.ThrottleHudReverserForward))
+			Throttles.Reverser.Neutral -> text.append(RailXLang.of(RailXLang.ThrottleHudReverserNeutral))
+			Throttles.Reverser.Backward -> text.append(RailXLang.of(RailXLang.ThrottleHudReverserBackward))
 		}
 		text.append(" ")
 		
 		if(throttle.gear == -Throttles.maxBreak - 1) {
-			text.append("EB")
+			text.append(RailXLang.of(RailXLang.ThrottleHudGearEmergencyBrake))
 		} else {
-			text.append(
+			text.append(RailXLang.of(
 				when {
-					throttle.gear > 0 -> "F"
-					throttle.gear == 0 -> "N"
-					else -> "B"
+					throttle.gear > 0 -> RailXLang.ThrottleHudGearForward
+					throttle.gear == 0 -> RailXLang.ThrottleHudGearNeutral
+					else -> RailXLang.ThrottleHudGearBackward
 				}
-			)
+			))
 			text.append("${abs(throttle.gear)}")
 		}
 		
 		graphics.drawString(mc.font, text, 16, graphics.guiHeight() - 29, 0xffffff)
 		
-		val text2 = Component.literal("Speed: ${Mth.floor(abs(carriage.train.speed) * 20 * 36 / 10)} km/h")
+		val text2 = RailXLang.of(
+			RailXLang.ThrottleHudSpeed,
+			Mth.floor(abs(carriage.train.speed) * 20 * 36 / 10),
+		)
 		graphics.drawString(mc.font, text2, 16, graphics.guiHeight() - 29 - 12, 0xffffff)
 	}
 }

@@ -1,5 +1,6 @@
 package com.lhwdev.minecraft.railx.compat.pantographsandwires
 
+import com.lhwdev.minecraft.railx.registry.RailXLang
 import com.lhwdev.minecraft.utils.vectors.plus
 import com.lhwdev.minecraft.utils.vectors.toVec3
 import de.mrjulsen.paw.block.CantileverBlock
@@ -48,9 +49,12 @@ object AutoCantileverApplier {
 		}
 		
 		Minecraft.getInstance().player?.sendSystemMessage(
-			Component.literal(
-				"Cantilever previous: width=${be.width} yOffset=${be.yOffset} " +
-					"new: width=${single.width} yOffset=${single.yOffset}"
+			RailXLang.of(
+				RailXLang.CompatPantographsWiresAutoCantilever,
+				be.width,
+				be.yOffset,
+				single.width,
+				single.yOffset,
 			)
 		)
 		PacketDistributor.sendToServer(UpdateCantileverAutoPacket(be.blockPos, single))

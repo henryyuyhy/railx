@@ -1,6 +1,7 @@
 package com.lhwdev.minecraft.railx.buildTrack
 
 import com.lhwdev.minecraft.railx.flexiTrack.FlexiPlacementInfo
+import com.lhwdev.minecraft.railx.registry.RailXLang
 import com.lhwdev.minecraft.railx.utils.CompoundTag
 import com.lhwdev.minecraft.railx.utils.getList
 import com.mojang.datafixers.util.Pair
@@ -89,7 +90,7 @@ class TrackPlanImpl(
 
 open class DummyTrackPlan : TrackPlan() {
 	override val name: Component
-		get() = Component.literal("dummy")
+		get() = RailXLang.of(RailXLang.BuildTrackDummyTrackPlanName)
 	
 	override fun addSegment(from: FlexiPlacementInfo) {}
 	

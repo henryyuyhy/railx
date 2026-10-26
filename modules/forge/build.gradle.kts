@@ -104,6 +104,11 @@ sourceSets.main.configure {
 	resources.srcDir("src/generated/resources")
 }
 
+// `.cache` is the incrementality state of the data generator; it is not a game asset.
+tasks.processResources {
+	exclude(".cache/**")
+}
+
 dependencies {
 	val v = libs.versions
 	val modDevRuntimeMods = modDevPlatform.modDevRuntimeMods

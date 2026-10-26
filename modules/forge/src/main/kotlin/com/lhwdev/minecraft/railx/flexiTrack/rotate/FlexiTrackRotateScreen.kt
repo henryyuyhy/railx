@@ -1,6 +1,7 @@
 package com.lhwdev.minecraft.railx.flexiTrack.rotate
 
 import com.lhwdev.minecraft.railx.flexiTrack.rotate.FlexiTrackRotateScrollBehavior.RotateStepMode
+import com.lhwdev.minecraft.railx.registry.RailXLang
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBoard
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsScreen
@@ -126,7 +127,7 @@ class FlexiTrackRotateScreen(
 			val selectionStyle = if(mode == newMode) ChatFormatting.GREEN else ChatFormatting.WHITE
 			return Component.empty()
 				.append(
-					Component.literal(name).withStyle(selectionStyle)
+					RailXLang.of(name).withStyle(selectionStyle)
 				)
 				.append(" (")
 				.append(Component.keybind(keybind).withStyle(selectionStyle))
@@ -134,12 +135,24 @@ class FlexiTrackRotateScreen(
 		}
 		
 		val text = Component.empty().apply {
-			append(formatMode(mode = RotateStepMode.Precise, name = "Precise", keybind = "key.keyboard.left.control"))
+			append(
+				formatMode(
+					mode = RotateStepMode.Precise,
+					name = RailXLang.FlexiTrackRotateModePrecise,
+					keybind = "key.keyboard.left.control",
+				)
+			)
 			if(behavior.hasCoarseMode) {
 				append(" | ")
-				append(formatMode(mode = RotateStepMode.Coarse, name = "Coarse", keybind = "key.keyboard.left.alt"))
+				append(
+					formatMode(
+						mode = RotateStepMode.Coarse,
+						name = RailXLang.FlexiTrackRotateModeCoarse,
+						keybind = "key.keyboard.left.alt",
+					)
+				)
 			}
-			append(" Mode")
+			append(RailXLang.of(RailXLang.FlexiTrackRotateModeSuffix))
 		}
 		
 		val textX = guiLeft + windowWidth / 2 - font.width(text) / 2

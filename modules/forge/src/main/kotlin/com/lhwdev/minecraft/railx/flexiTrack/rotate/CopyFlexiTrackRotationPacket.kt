@@ -3,6 +3,7 @@ package com.lhwdev.minecraft.railx.flexiTrack.rotate
 import com.lhwdev.minecraft.railx.flexiTrack.FlexiDirection
 import com.lhwdev.minecraft.railx.registry.AllPackets
 import com.lhwdev.minecraft.railx.registry.RailXPacketType
+import com.lhwdev.minecraft.railx.registry.RailXLang
 import com.lhwdev.minecraft.railx.utils.CompoundTag
 import com.simibubi.create.content.equipment.clipboard.ClipboardContent
 import com.simibubi.create.content.equipment.clipboard.ClipboardOverrides
@@ -44,7 +45,7 @@ class CopyFlexiTrackRotationPacket(val direction: FlexiDirection) : ServerboundP
 		player.displayClientMessage(
 			CreateLang.translate(
 				"clipboard.copied_from",
-				Component.literal("Curve Rotation").withStyle(ChatFormatting.WHITE)
+				RailXLang.of(RailXLang.FlexiTrackRotateClipboardName).withStyle(ChatFormatting.WHITE)
 			).style(ChatFormatting.GREEN).component(), true
 		)
 	}

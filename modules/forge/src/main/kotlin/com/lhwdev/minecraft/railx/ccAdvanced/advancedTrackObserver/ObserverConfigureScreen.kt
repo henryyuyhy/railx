@@ -1,5 +1,6 @@
 package com.lhwdev.minecraft.railx.ccAdvanced.advancedTrackObserver
 
+import com.lhwdev.minecraft.railx.registry.RailXLang
 import com.simibubi.create.foundation.gui.AllGuiTextures
 import com.simibubi.create.foundation.gui.AllIcons
 import com.simibubi.create.foundation.gui.widget.IconButton
@@ -11,7 +12,7 @@ import net.minecraft.network.chat.Component
 
 
 class ObserverConfigureScreen(val blockEntity: AdvancedTrackObserverBlockEntity) :
-	AbstractSimiScreen(Component.literal("Advanced Observer")) {
+	AbstractSimiScreen(RailXLang.of(RailXLang.AdvancedTrackObserverScreenTitle)) {
 	private val background = AllGuiTextures.SCHEDULE
 	
 	private lateinit var codeRule: EditBox
@@ -24,7 +25,7 @@ class ObserverConfigureScreen(val blockEntity: AdvancedTrackObserverBlockEntity)
 			font,
 			guiLeft + 16, guiTop + 16,
 			windowWidth - 32, windowHeight - 32,
-			Component.literal("Insert lua rule")
+			RailXLang.of(RailXLang.AdvancedTrackObserverScreenInsertLuaRule)
 		)
 		codeRule.setMaxLength(512)
 		codeRule.value = blockEntity.rule.code

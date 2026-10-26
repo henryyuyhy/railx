@@ -2,6 +2,7 @@ package com.lhwdev.minecraft.railx.middleTrack
 
 import com.lhwdev.minecraft.railx.RailXConfig
 import com.lhwdev.minecraft.railx.middleTrack.visual.MiddleTrackVisuals
+import com.lhwdev.minecraft.railx.registry.RailXLang
 import com.lhwdev.minecraft.railx.utils.getOrNull
 import com.simibubi.create.content.trains.track.TrackBlockEntity
 import net.createmod.catnip.data.WorldAttached
@@ -36,10 +37,7 @@ object MiddleTrackClient {
 		
 		if(RailXConfig.Server.common.optimizeFakeTracks.isFalse) {
 			minecraft.player?.sendSystemMessage(
-				Component.literal(
-					"railx: common.optimizeFakeTracks is turned off, but required for middleTrack feature. " +
-						"turning it on..."
-				)
+				RailXLang.of(RailXLang.MiddleTrackOptimizeFakeTracksRequired)
 			)
 			RailXConfig.Server.common.optimizeFakeTracks.set(true)
 		}

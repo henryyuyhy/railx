@@ -5,6 +5,7 @@ import com.copycatsplus.copycats.foundation.copycat.ICopycatBlock
 import com.lhwdev.minecraft.railx.common.ScrollValueBehaviorExtension
 import com.lhwdev.minecraft.railx.common.gravelLayer.GravelLayerBlock
 import com.lhwdev.minecraft.railx.compat.CompatMods
+import com.lhwdev.minecraft.railx.registry.RailXLang
 import com.railwayteam.railways.registry.CRIcons
 import com.simibubi.create.AllSoundEvents
 import com.simibubi.create.content.contraptions.actors.roller.RollerBlockEntity
@@ -177,15 +178,14 @@ class AdvancedRollerBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: 
 				val currentBlock = currentItem.block
 				if(CompatMods.copycats) {
 					if(currentBlock is ICopycatBlock) {
-						val tip = Component.literal("Click with material to apply to copycat")
+						val tip = RailXLang.of(RailXLang.AdvancedRollerTipApplyMaterial)
 						val copycat = CopycatItemStack.parse(level = blockEntity.level!!, stack = currentStack)
 						if(copycat != null && copycat.materials.any { !it.isEmpty }) {
-							tip.append(", previously ")
 							val materialsText = copycat.materials
 								.filter { !it.isEmpty }
 								.map { it.material.block.name }
 								.fold(Component.empty()) { acc, material -> acc.append(material) }
-							tip.append(materialsText)
+							tip.append(RailXLang.of(RailXLang.AdvancedRollerTipPreviously, materialsText))
 						}
 						return tip
 					}
@@ -263,10 +263,11 @@ class AdvancedRollerBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: 
 			
 			if(applyMaterial(toApply)) {
 				player.displayClientMessage(
-					Component.literal("Applied material ")
-						.append(toApply.displayName)
-						.append(" to ")
-						.append(filter.item().displayName), true
+					RailXLang.of(
+						RailXLang.AdvancedRollerAppliedMaterial,
+						toApply.displayName,
+						filter.item().displayName,
+					), true
 				)
 				return
 			}
@@ -312,7 +313,7 @@ class AdvancedRollerBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: 
 			label,
 			max,
 			1,
-			listOf(Component.literal("Select")),
+			listOf(RailXLang.of(RailXLang.GenericSelect)),
 			ValueSettingsFormatter.ScrollOptionSettingsFormatter(options.toTypedArray()),
 		)
 		

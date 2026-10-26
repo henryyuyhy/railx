@@ -3,6 +3,7 @@ package com.lhwdev.minecraft.railx.common.commands
 import com.lhwdev.minecraft.railx.realisticSpeed.CustomContraptionBlockEntities
 import com.lhwdev.minecraft.railx.realisticSpeed.entities
 import com.lhwdev.minecraft.railx.registry.RailXCommandBuildContext
+import com.lhwdev.minecraft.railx.registry.RailXLang
 import com.lhwdev.minecraft.railx.utils.ContraptionLevelReader
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
@@ -21,7 +22,7 @@ import java.lang.invoke.MethodHandles
 
 
 private val ErrorNoFramedBlock =
-	SimpleCommandExceptionType(Component.literal("requires FramedBlocks mod"))
+	SimpleCommandExceptionType(RailXLang.of(RailXLang.CommandErrorNoFramedBlocks))
 
 fun RailXCommandBuildContext.fixBrokenFramedTrainsCommand(): LiteralArgumentBuilder<CommandSourceStack> = Commands
 	.literal("fixBrokenFramedTrains")
@@ -47,7 +48,7 @@ fun RailXCommandBuildContext.fixBrokenFramedTrainsCommand(): LiteralArgumentBuil
 		}
 		
 		source.sendSuccess(
-			{ Component.literal("Successfully updated every trains. Please rejoin world from client.") },
+			{ RailXLang.of(RailXLang.CommandFixBrokenFramedTrainsSuccess) },
 			true
 		)
 		1
